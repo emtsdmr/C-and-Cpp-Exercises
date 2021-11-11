@@ -16,7 +16,7 @@ struct HashNode{
 
 void add(int Ai,HashNode** elements)
 {
-	int status=0,indx;
+	int status=0;
 	int order=(int)Ai/10; // hash code
 
 	if(elements[order] == NULL)
@@ -35,7 +35,7 @@ void add(int Ai,HashNode** elements)
 		}
 		else
 		{
-			while(current->next != NULL)
+			while(current->next != NULL || current->index == Ai)
 			{
 				
 				if(current->index == Ai)
@@ -61,6 +61,18 @@ void add(int Ai,HashNode** elements)
 	}
 }
 
+void printHashTable(int i,HashNode** elements)
+{
+	
+			HashNode* current=elements[i];
+			cout<<"index->value/number->frequency:"<<endl;
+			while(current!=NULL)
+			{
+				cout<<current->index<<" -> "<<current->value<<endl;
+				current=current->next;
+			}
+}
+
 int main() {
 	//code
 	int T,N,A,capacity,status=0;
@@ -78,12 +90,8 @@ int main() {
 	        add(A,elements);
 
 	    }
-			/*HashNode* current=elements[0];
-			while(current!=NULL)
-			{
-				cout<< current->index<<" ";
-				current=current->next;
-			}cout<<endl;*/
+
+		//printHashTable(0,elements);
 		
 		for(int k=60;k>0;k--)
 		{
