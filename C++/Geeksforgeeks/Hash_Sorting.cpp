@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <queue>
 using namespace std;
 
 struct HashNode{
@@ -13,6 +14,103 @@ struct HashNode{
         next=n;
     }
 };
+
+
+class HashSort{
+private:
+	HashNode** elements;
+	int capacity;
+public:
+	HashSort()
+	{
+		capacity=7;
+		elements= new HashNode*[capacity]();
+	}
+	~HashSort()
+	{
+		delete[] elements;
+	}
+
+	int hashCode(int i)
+	{
+		return (int) i/10;
+	}
+
+	void add(int Ai)
+	{
+		int status=0;
+		int order=hashCode(Ai);
+
+		if(elements[order] == NULL)
+		{
+			HashNode* newNode=new HashNode(Ai,1,NULL);
+			elements[order]=newNode;
+		}
+		else
+		{
+			HashNode* current=elements[order];
+			if(Ai < current->index)
+			{//	cout<<"***"<<endl;
+				HashNode* newNode=new HashNode(Ai,1,NULL);
+				newNode->next=current;
+				elements[order]=newNode;
+			}
+			else
+			{
+				while(current->next != NULL || current->index == Ai)
+				{
+					
+					if(current->index == Ai)
+					{
+						current->value++;
+						status=1;
+						break;
+					}
+					if(current->next->index > Ai)
+					{
+						break;
+					}	
+
+					current=current->next;
+				}
+				if(status==0)
+				{//	cout<<"$$$"<<endl;
+					HashNode* newNode=new HashNode(Ai,1,NULL);
+					newNode->next=current->next;
+					current->next=newNode;
+				}
+			}
+		}
+	}
+
+	void printHashTable(int i)
+	{
+		
+				HashNode* current=elements[i];
+				cout<<"index->value/number->frequency:"<<endl;
+				while(current!=NULL)
+				{
+					cout<<"   "<<current->index<<" -> "<<current->value<<endl;
+					current=current->next;
+				}
+	}
+	
+	
+
+};
+
+void test_add(vector<int> &v, HashSort &hs)
+{
+	cout<<"inputs:";
+	for(int i : v)
+	{
+		cout<<" "<<i;
+		hs.add(i);
+	}
+	cout<<endl;
+	hs.printHashTable(0);	
+
+}
 
 void add(int Ai,HashNode** elements)
 {
@@ -61,10 +159,10 @@ void add(int Ai,HashNode** elements)
 	}
 }
 
-void printHashTable(int i,HashNode** elements)
+void printHashTable(int order,HashNode** elements)
 {
 	
-			HashNode* current=elements[i];
+			HashNode* current=elements[order];
 			cout<<"index->value/number->frequency:"<<endl;
 			while(current!=NULL)
 			{
@@ -75,7 +173,7 @@ void printHashTable(int i,HashNode** elements)
 
 int main() {
 	//code
-	int T,N,A,capacity,status=0;
+/*	int T,N,A,capacity,status=0;
 	HashNode** elements;
 	cin>>T;
 	for (int i=0; i<T;i++)
@@ -119,5 +217,10 @@ int main() {
 			}
 		}cout<<endl;
 	}
+*/
+	HashSort hs;
+	vector<int> v{4,5,9,8,4,5,2,1};
+	test_add(v,hs);
+
 	return 0;
 }
