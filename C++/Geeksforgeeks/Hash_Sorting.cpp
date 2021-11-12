@@ -1,17 +1,19 @@
 #include <iostream>
 #include <string>
 #include <queue>
+#include <vector>
+
 using namespace std;
 
 struct HashNode{
-	int index;
-    int value;
+	int number;
+    int frequency;
     HashNode* next;
-    HashNode(int i=0,int v=0, HashNode* n=NULL)
+    HashNode(int n=0,int f=0, HashNode* nx=NULL)
     {
-		index=i;
-        value=v;
-        next=n;
+		number=n;
+        frequency=f;
+        next=nx;
     }
 };
 
@@ -20,8 +22,8 @@ private:
 	HashNode** elements;
 	int capacity;
 	int size;
-public:
 	queue<int> sorted;
+public:
 	HashSort()
 	{
 		capacity=7;
@@ -46,35 +48,36 @@ public:
 
 	void add(int Ai)
 	{
+		size++;
 		int status=0;
-		int order=hashCode(Ai);
+		int index=hashCode(Ai);
 
-		if(elements[order] == NULL)
+		if(elements[index] == NULL)
 		{
 			HashNode* newNode=new HashNode(Ai,1,NULL);
-			elements[order]=newNode;
+			elements[index]=newNode;
 		}
 		else
 		{
-			HashNode* current=elements[order];
-			if(Ai < current->index)
-			{//	cout<<"***"<<endl;
+			HashNode* current=elements[index];
+			if(Ai < current->number)
+			{
 				HashNode* newNode=new HashNode(Ai,1,NULL);
 				newNode->next=current;
-				elements[order]=newNode;
+				elements[index]=newNode;
 			}
 			else
 			{
-				while(current->next != NULL || current->index == Ai)
+				while(current->next != NULL || current->number == Ai)
 				{
 					
-					if(current->index == Ai)
+					if(current->number == Ai)
 					{
-						current->value++;
+						current->frequency++;
 						status=1;
 						break;
 					}
-					if(current->next->index > Ai)
+					if(current->next->number > Ai)
 					{
 						break;
 					}	
@@ -82,7 +85,7 @@ public:
 					current=current->next;
 				}
 				if(status==0)
-				{//	cout<<"$$$"<<endl;
+				{
 					HashNode* newNode=new HashNode(Ai,1,NULL);
 					newNode->next=current->next;
 					current->next=newNode;
@@ -91,7 +94,28 @@ public:
 		}
 	}
 
-	void sort_remove(int limit)
+	void remove(int index, HashNode* &current, HashNode* &previous)
+	{
+		size--;
+		if(current==elements[index])
+		{
+			HashNode* trash=elements[index];
+			elements[index]=elements[index]->next;
+			current= elements[index];
+			previous->next=elements[index];
+			delete trash;
+
+		}
+		else
+		{
+			HashNode* trash=current;
+			previous->next=current->next;
+			current=previous->next;
+			delete trash;
+		}
+	}
+
+	void sort(int limit)
 	{
 		int status=0;
 		for(int k=limit;k>0;k--)
@@ -99,24 +123,24 @@ public:
 			for(int l=0;l<capacity;l++)
 			{
 				HashNode* current=elements[l];
+				HashNode* previous=new HashNode(0,0,current);
 
 				while(current != NULL)
 				{
-					if(current->value == k)
+					if(current->frequency == k)
 					{
-						//sorting
 						for(int m=k;m>0;m--)
-							sorted.push(current->index);
+							sorted.push(current->number);
 
-						//removing
-						HashNode* trash=current;
-						current=current->next;//wrong bağı doğru kur
-						delete trash;
+						remove(l,current,previous);
 						status=1;
 						printHashTable(0);
 					}
 					if(status == 0)
+					{
+						previous=current;
 						current=current->next;
+					}
 					else
 						status=0;
 				}
@@ -129,10 +153,10 @@ public:
 	{
 		
 				HashNode* current=elements[i];
-				cout<<"index->value/number->frequency:"<<endl;
+				cout<<"number->frequency:"<<endl;
 				while(current!=NULL)
 				{
-					cout<<"   "<<current->index<<" -> "<<current->value<<endl;
+					cout<<"    "<<current->number<<" -> "<<current->frequency<<endl;
 					current=current->next;
 				}
 	}
@@ -156,22 +180,25 @@ void test_add(vector<int> &unsorted_v, HashSort &hs)
 
 void test_sort_remove(vector<int> &sorted_v, HashSort &hs)
 {
-	hs.sort_remove(60);
-	queue<int> temp=hs.getSortedQueue();cout<<temp.size()<<endl;
+	hs.sort(60);
+	queue<int> temp=hs.getSortedQueue();
 	int i=0;
 	bool status=true;
 	cout<<endl<<"outputs:";
+
+	if(temp.size()!=sorted_v.size())
+		status=false;
+
 	while(!temp.empty())
 	{
-		if(sorted_v[i] != temp.front() || temp.size()!=sorted_v.size())
+		if(sorted_v[i] != temp.front())
 		{
-			cout<<"...";
 			status=false;
-			break;
 		}
 		cout<<" "<<temp.front();
 		temp.pop(); i++;
 	}
+
 	if(status)
 		cout<<endl<<"Sorting was successful!"<<endl;
 	else
@@ -183,9 +210,11 @@ int main() {
 	HashSort hs;
 	//vector<int> unsorted_v{4,5,9,8,4,5,2,1};
 	//vector<int> sorted_v{4,4,5,5,1,2,8,9};
+	//vector<int> sorted_v{5,5,4,4,1,2,8,9};//wrong case
 
 	vector<int> unsorted_v{1,3,7,7,7,3,2,2,2,7,3,1,7,1,6,3,5,5,4,5,6,2,1,2,4,7,3,1,3,5,4,1,7,2,6,1,2};
 	vector<int> sorted_v{1,1,1,1,1,1,1,2,2,2,2,2,2,2,7,7,7,7,7,7,7,3,3,3,3,3,3,5,5,5,5,4,4,4,6,6,6};
+	//vector<int> sorted_v{1,1,1,1,1,1,1,2,2,2,2,2,2,2,7,7,7,7,7,7,3,3,3,3,3,3,5,5,5,5,4,4,4,6,6,6,7};//wrong case
 
 	test_add(unsorted_v,hs);
 	test_sort_remove(sorted_v,hs);
