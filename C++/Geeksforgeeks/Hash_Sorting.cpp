@@ -15,20 +15,28 @@ struct HashNode{
     }
 };
 
-
 class HashSort{
 private:
 	HashNode** elements;
 	int capacity;
+	int size;
 public:
+	queue<int> sorted;
 	HashSort()
 	{
 		capacity=7;
+		size=0;
 		elements= new HashNode*[capacity]();
 	}
+
 	~HashSort()
 	{
 		delete[] elements;
+	}
+
+	queue<int> getSortedQueue()
+	{
+		return sorted;
 	}
 
 	int hashCode(int i)
@@ -83,6 +91,40 @@ public:
 		}
 	}
 
+	void sort_remove(int limit)
+	{
+		int status=0;
+		for(int k=limit;k>0;k--)
+		{
+			for(int l=0;l<capacity;l++)
+			{
+				HashNode* current=elements[l];
+
+				while(current != NULL)
+				{
+					if(current->value == k)
+					{
+						//sorting
+						for(int m=k;m>0;m--)
+							sorted.push(current->index);
+
+						//removing
+						HashNode* trash=current;
+						current=current->next;//wrong bağı doğru kur
+						delete trash;
+						status=1;
+						printHashTable(0);
+					}
+					if(status == 0)
+						current=current->next;
+					else
+						status=0;
+				}
+			}
+		}
+
+	}
+
 	void printHashTable(int i)
 	{
 		
@@ -99,10 +141,10 @@ public:
 
 };
 
-void test_add(vector<int> &v, HashSort &hs)
+void test_add(vector<int> &unsorted_v, HashSort &hs)
 {
 	cout<<"inputs:";
-	for(int i : v)
+	for(int i : unsorted_v)
 	{
 		cout<<" "<<i;
 		hs.add(i);
@@ -112,115 +154,41 @@ void test_add(vector<int> &v, HashSort &hs)
 
 }
 
-void add(int Ai,HashNode** elements)
+void test_sort_remove(vector<int> &sorted_v, HashSort &hs)
 {
-	int status=0;
-	int order=(int)Ai/10; // hash code
-
-	if(elements[order] == NULL)
+	hs.sort_remove(60);
+	queue<int> temp=hs.getSortedQueue();cout<<temp.size()<<endl;
+	int i=0;
+	bool status=true;
+	cout<<endl<<"outputs:";
+	while(!temp.empty())
 	{
-		HashNode* newNode=new HashNode(Ai,1,NULL);
-		elements[order]=newNode;
-	}
-	else
-	{
-		HashNode* current=elements[order];
-		if(Ai < current->index)
-		{//	cout<<"***"<<endl;
-			HashNode* newNode=new HashNode(Ai,1,NULL);
-			newNode->next=current;
-			elements[order]=newNode;
-		}
-		else
+		if(sorted_v[i] != temp.front() || temp.size()!=sorted_v.size())
 		{
-			while(current->next != NULL || current->index == Ai)
-			{
-				
-				if(current->index == Ai)
-				{
-					current->value++;
-					status=1;
-					break;
-				}
-				if(current->next->index > Ai)
-				{
-					break;
-				}	
-
-				current=current->next;
-			}
-			if(status==0)
-			{//	cout<<"$$$"<<endl;
-				HashNode* newNode=new HashNode(Ai,1,NULL);
-				newNode->next=current->next;
-				current->next=newNode;
-			}
+			cout<<"...";
+			status=false;
+			break;
 		}
+		cout<<" "<<temp.front();
+		temp.pop(); i++;
 	}
-}
-
-void printHashTable(int order,HashNode** elements)
-{
-	
-			HashNode* current=elements[order];
-			cout<<"index->value/number->frequency:"<<endl;
-			while(current!=NULL)
-			{
-				cout<<current->index<<" -> "<<current->value<<endl;
-				current=current->next;
-			}
+	if(status)
+		cout<<endl<<"Sorting was successful!"<<endl;
+	else
+		cout<<endl<<"Wrong sorting technic!"<<endl;
 }
 
 int main() {
 	//code
-/*	int T,N,A,capacity,status=0;
-	HashNode** elements;
-	cin>>T;
-	for (int i=0; i<T;i++)
-	{
-	    cin>>N;
-		capacity=60/10+1;//HashCode
-		elements= new HashNode*[capacity]();
-	    for(int j=0; j<N;j++)
-	    {
-			//cout<<"Add an element: ";
-	        cin>>A;
-	        add(A,elements);
-
-	    }
-
-		//printHashTable(0,elements);
-		
-		for(int k=60;k>0;k--)
-		{
-			for(int l=0;l<7;l++)
-			{
-				HashNode* current=elements[l];
-
-				while(current != NULL)
-				{
-					if(current->value == k)
-					{
-						for(int m=k;m>0;m--)
-							cout<<current->index<<" ";
-
-						HashNode* trash=current;
-						current=current->next;
-						delete trash;
-						status=1;
-					}
-					if(status == 0)
-						current=current->next;
-					else
-						status=0;
-				}
-			}
-		}cout<<endl;
-	}
-*/
 	HashSort hs;
-	vector<int> v{4,5,9,8,4,5,2,1};
-	test_add(v,hs);
+	//vector<int> unsorted_v{4,5,9,8,4,5,2,1};
+	//vector<int> sorted_v{4,4,5,5,1,2,8,9};
+
+	vector<int> unsorted_v{1,3,7,7,7,3,2,2,2,7,3,1,7,1,6,3,5,5,4,5,6,2,1,2,4,7,3,1,3,5,4,1,7,2,6,1,2};
+	vector<int> sorted_v{1,1,1,1,1,1,1,2,2,2,2,2,2,2,7,7,7,7,7,7,7,3,3,3,3,3,3,5,5,5,5,4,4,4,6,6,6};
+
+	test_add(unsorted_v,hs);
+	test_sort_remove(sorted_v,hs);
 
 	return 0;
 }
