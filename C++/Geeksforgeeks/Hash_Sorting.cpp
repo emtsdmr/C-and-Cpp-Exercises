@@ -1,5 +1,18 @@
+/*  
+	Sorting Elements of an Array by Frequency 
+	sort the array according to frequency of elements. That is elements that have higher frequency come first. 
+	If frequencies of two elements are same, then smaller number comes first.
+
+	Constraints:
+	5 ≤ Vector size ≤ 130
+	1 ≤ Every element of the vector ≤ 60
+	
+	Example:
+	5 5 4 6 4 -> 4 4 5 5 6
+	9 9 9 2 5 -> 9 9 9 2 5
+*/
+
 #include <iostream>
-#include <string>
 #include <queue>
 #include <vector>
 
@@ -39,6 +52,16 @@ public:
 	queue<int> getSortedQueue()
 	{
 		return sorted;
+	}
+
+	int get_size()
+	{
+		return size;
+	}
+
+	int get_capacity()
+	{
+		return capacity;
 	}
 
 	int hashCode(int i)
@@ -102,7 +125,7 @@ public:
 			HashNode* trash=elements[index];
 			elements[index]=elements[index]->next;
 			current= elements[index];
-			previous->next=elements[index];
+			previous->next=current;
 			delete trash;
 
 		}
@@ -134,7 +157,8 @@ public:
 
 						remove(l,current,previous);
 						status=1;
-						printHashTable(0);
+						cout<<"Table "<<l<<endl;
+						printHashTable(l);
 					}
 					if(status == 0)
 					{
@@ -153,7 +177,11 @@ public:
 	{
 		
 				HashNode* current=elements[i];
-				cout<<"number->frequency:"<<endl;
+				if (current==NULL)
+					cout<<"Empty\n"<<endl;
+				else
+					cout<<"number->frequency:"<<endl;
+
 				while(current!=NULL)
 				{
 					cout<<"    "<<current->number<<" -> "<<current->frequency<<endl;
@@ -173,8 +201,13 @@ void test_add(vector<int> &unsorted_v, HashSort &hs)
 		cout<<" "<<i;
 		hs.add(i);
 	}
+	//hs.printHashTable(0);	
 	cout<<endl;
-	hs.printHashTable(0);	
+	for(int i=0;i<hs.get_capacity();i++)
+	{
+		cout<<"Table "<<i<<endl;
+		hs.printHashTable(i);	
+	}
 
 }
 
@@ -212,9 +245,13 @@ int main() {
 	//vector<int> sorted_v{4,4,5,5,1,2,8,9};
 	//vector<int> sorted_v{5,5,4,4,1,2,8,9};//wrong case
 
-	vector<int> unsorted_v{1,3,7,7,7,3,2,2,2,7,3,1,7,1,6,3,5,5,4,5,6,2,1,2,4,7,3,1,3,5,4,1,7,2,6,1,2};
-	vector<int> sorted_v{1,1,1,1,1,1,1,2,2,2,2,2,2,2,7,7,7,7,7,7,7,3,3,3,3,3,3,5,5,5,5,4,4,4,6,6,6};
+	//vector<int> unsorted_v{1,3,7,7,7,3,2,2,2,7,3,1,7,1,6,3,5,5,4,5,6,2,1,2,4,7,3,1,3,5,4,1,7,2,6,1,2};
+	//vector<int> sorted_v{1,1,1,1,1,1,1,2,2,2,2,2,2,2,7,7,7,7,7,7,7,3,3,3,3,3,3,5,5,5,5,4,4,4,6,6,6};
 	//vector<int> sorted_v{1,1,1,1,1,1,1,2,2,2,2,2,2,2,7,7,7,7,7,7,3,3,3,3,3,3,5,5,5,5,4,4,4,6,6,6,7};//wrong case
+
+	vector<int> unsorted_v{11,13,27,17,47,23,12,21,32,47,23,51,57,16,60,13,15,35,42,15,26,32,17,27,47,57,13,1,4,5,4,1,7,2,36,1,2};
+	vector<int> sorted_v{1,1,1,13,13,13,47,47,47,2,2,4,4,15,15,17,17,23,23,27,27,32,32,57,57,5,7,11,12,16,21,26,35,36,42,51,60};
+	//vector<int> sorted_v{1,1,1,13,13,13,2,2,4,4,5,7,11,12,15,15,16,17,17,21,23,23,26,27,27,32,32,35,36,42,47,47,47,51,57,57,60};//wrong case
 
 	test_add(unsorted_v,hs);
 	test_sort_remove(sorted_v,hs);
