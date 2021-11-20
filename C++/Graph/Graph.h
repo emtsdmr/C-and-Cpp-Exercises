@@ -42,6 +42,9 @@ class Graph{
 		Graph();
 		~Graph();
 
+		
+		const set<Node*> get_Nodes() const;
+		const map<string,set<Edge*>> get_Edges() const;
 		bool hasNode(string name);
 		Node* addNode(string name);
 		Edge* addEdge(Node* n1, Node* n2);

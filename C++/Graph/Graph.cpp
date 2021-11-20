@@ -7,12 +7,22 @@ using namespace std;
 Graph::Graph()
 {
 	/*set<Node*> Nodes;
-	map<string,set<Edge*> Edges;*/
+	map<string,set<Edge*>> Edges;*/
 }
 
 Graph::~Graph()
 {
 
+}
+
+const set<Node*> Graph::get_Nodes() const
+{
+	return Nodes;
+}
+
+const  map<string,set<Edge*>> Graph::get_Edges() const
+{
+	return Edges;
 }
 
 Node* Graph::getNode(string name) const
@@ -46,23 +56,36 @@ bool Graph::hasNode(string name)
 
 Node* Graph::addNode(string name)
 {
+	Node* n=NULL;
 	if(hasNode(name))
-	{
 		cout<<name<<" node has already been added!"<<endl;
-		return getNode(name);
-	}
 	else
 	{
-		Node* n=new Node(name);
+		n=new Node(name);
 		Nodes.insert(n);
-		return n;
 	}
+	return n;
 }
 
-Edge* Graph::addEdge(Node* v1, Node* v2)
+Edge* Graph::addEdge(Node* n1, Node* n2)
 {
-	Edge* e=new Edge(v1,v2);
-	
+	Edge* e=NULL;
+	if(hasNode(n1->name) || hasNode(n2->name))
+	{
+		e=new Edge(n1,n2);
+		auto itr=Edges.find(n1->name);
+		if(itr==Edges.end())
+		{
+			Edges[n1->name]={e};
+		}
+		else
+		{
+			Edges[n1->name].insert(e);
+		}
+	}
+	else
+		cout<<"Unvalid node(s) for edge!"<<endl;
+
 	return e;
 }
  /*
