@@ -42,17 +42,17 @@ class Graph{
 		Graph();
 		~Graph();
 
-		
 		const set<Node*> get_Nodes() const;
 		const map<string,set<Edge*>> get_Edges() const;
+		void printGraph()const;
+		Node* getNode(string name) const;
 		bool hasNode(string name);
 		Node* addNode(string name);
-		Edge* addEdge(Node* n1, Node* n2);
+		Edge* addEdge(Node* n1, Node* n2, int w=0);
 		void clear();
 		const set<Edge*>& getEdgeSet() const ;
 		const set<Edge*>& getEdgeSet(Node* n) const;
 		const set<Node*> getNeighbors(Node* n) const;
-		Node* getNode(string name) const;
 		const set<Node*>& getNodeSet() const;
 		bool isEmpty() const;
 		bool isNeighbor(Node* n1, Node* n2) const;
