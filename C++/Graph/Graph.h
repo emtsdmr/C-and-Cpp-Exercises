@@ -49,7 +49,6 @@ class Graph{
 		bool hasNode(string name);
 		Node* addNode(string name);
 		Edge* addEdge(Node* n1, Node* n2, int w=0);
-		void clear();
 		const set<Edge*>& getEdgeSet() const ;
 		const set<Edge*>& getEdgeSet(Node* n) const;
 		const set<Node*> getNeighbors(Node* n) const;
@@ -59,6 +58,7 @@ class Graph{
 		void removeEdge(Node* n1, Node* n2);
 		void removeNode(string name);
 		int size() const;
+		void clear();
 		string toString() const;
 
 };	

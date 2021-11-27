@@ -43,17 +43,25 @@ void Graph::printGraph()const
 
 Node* Graph::getNode(string name) const
 {
-
-	if(!Nodes.empty())
+	try
 	{
-		set<Node*>::iterator itr;
-		for(itr=Nodes.begin();itr!=Nodes.end();itr++)
+		if(Nodes.empty())
+			throw "getNodes("+name+"):Empty Nodes!";
+		else
 		{
-			if((*itr)->name == name)
-				return *itr;
+			set<Node*>::iterator itr;
+			for(itr=Nodes.begin();itr!=Nodes.end();itr++)
+			{
+				if((*itr)->name == name)
+					return *itr;
+			}
+			throw "getNodes("+name+"):No node named "+name+"!";
 		}
 	}
-	cout<<"There is no node named "<<name<<"!"<<endl;
+	catch(string s)
+	{
+		cout<<s<<endl;
+	}
 	return NULL;
 }
 bool Graph::hasNode(string name)
@@ -73,12 +81,18 @@ bool Graph::hasNode(string name)
 Node* Graph::addNode(string name)
 {
 	Node* n=NULL;
-	if(hasNode(name))
-		cout<<name<<" node has already been added!"<<endl;
-	else
+	try{
+		if(hasNode(name))
+			throw "addNode("+name+"):"+name+" node has already been added!";
+		else
+		{
+			n=new Node(name);
+			Nodes.insert(n);
+		}
+	}
+	catch(string s)
 	{
-		n=new Node(name);
-		Nodes.insert(n);
+		cout<<s<<endl;
 	}
 	return n;
 }
@@ -86,37 +100,44 @@ Node* Graph::addNode(string name)
 Edge* Graph::addEdge(Node* n1, Node* n2, int w)
 {
 	Edge* e=NULL;
-	if(hasNode(n1->name) && hasNode(n2->name))
-	{
-		e=new Edge(n1,n2,w);
-		auto itr=Edges.find(n1->name);
-		if(itr==Edges.end())
+	try{
+		if(n1==NULL || n2==NULL)
+			throw string("addEdge(NULL):Nullptr node(s) for edge!");
+
+		else if(hasNode(n1->name) && hasNode(n2->name))
 		{
-			Edges[n1->name]={e};
+			e=new Edge(n1,n2,w);
+			auto itr=Edges.find(n1->name);
+			if(itr==Edges.end())
+			{
+				Edges[n1->name]={e};
+			}
+			else
+			{
+				Edges[n1->name].insert(e);
+			}
 		}
 		else
-		{
-			Edges[n1->name].insert(e);
-		}
+			throw "addEdge("+n1->name+","+n2->name+"):Unvalid node(s) for edge!";
 	}
-	else
-		cout<<"Unvalid node(s) for edge!"<<endl;
+	catch(string s)
+	{
+		cout<<s<<endl;
+	}
 
 	return e;
 }
+
  /*
-const set<Edges*>& getEdgeSet() const 
-{
-
-
-
 const set<Edges*>& getEdgeSet(Node* n) const
 {
-	return v->edges;
+	set<Edges*> s{};
+	if(hasNode(n->name))
+		s=Edges[n->name];
+	return s;
 }
 
 
-void clear();
 const set<Node*> getNeighbors(Node* v) const;
 Node* getNode(string name) const;
 const set<Node*>& getNodeSet() const;
@@ -125,4 +146,5 @@ bool isNeighbor(Node* v1, Node* v2) const;
 void removeEdge(Node* v1, Node* v2);
 void removeNode(string name);
 int size() const;
+void clear();
 string toString() const;*/
