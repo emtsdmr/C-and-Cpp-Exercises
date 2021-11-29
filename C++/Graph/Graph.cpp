@@ -1,6 +1,7 @@
 #include "Graph.h"
 #include <iostream>
 #include <string>
+#include <iterator>
 
 using namespace std;
 
@@ -64,7 +65,7 @@ Node* Graph::getNode(string name) const
 	}
 	return NULL;
 }
-bool Graph::hasNode(string name)
+bool Graph::hasNode(string name)const
 {
 	if(!Nodes.empty())
 	{
@@ -128,16 +129,28 @@ Edge* Graph::addEdge(Node* n1, Node* n2, int w)
 	return e;
 }
 
- /*
-const set<Edges*>& getEdgeSet(Node* n) const
+const set<Edge*> Graph::getEdgeSet(Node* n)const 
 {
-	set<Edges*> s{};
-	if(hasNode(n->name))
-		s=Edges[n->name];
-	return s;
+	set<Edge*> sEdge{};
+	auto it=Edges.find(n->name);
+	if(it!=Edges.end())
+		sEdge=it->second;
+	return sEdge;
+}
+void Graph::printEdgeSet(const set<Edge*> sEdge)const
+{
+	if(sEdge.empty())
+		cout<<"Empty Set of Edges!"<<endl;
+	else
+	{
+		
+		for(auto it=sEdge.begin();it!=sEdge.end();it++)
+			cout<<(*it)->start->name<<"->"<<(*it)->finish->name<<","<<(*it)->weight<<" ";
+		cout<<endl;
+	}
 }
 
-
+/*
 const set<Node*> getNeighbors(Node* v) const;
 Node* getNode(string name) const;
 const set<Node*>& getNodeSet() const;

@@ -46,11 +46,12 @@ class Graph{
 		const map<string,set<Edge*>> get_Edges() const;
 		void printGraph()const;
 		Node* getNode(string name) const;
-		bool hasNode(string name);
+		bool hasNode(string name)const;
 		Node* addNode(string name);
 		Edge* addEdge(Node* n1, Node* n2, int w=0);
-		const set<Edge*>& getEdgeSet() const ;
-		const set<Edge*>& getEdgeSet(Node* n) const;
+		//const set<Edge*>& getEdgeSet() const ;
+		const set<Edge*> getEdgeSet(Node* n)const;
+		void printEdgeSet(const set<Edge*> s)const;
 		const set<Node*> getNeighbors(Node* n) const;
 		const set<Node*>& getNodeSet() const;
 		bool isEmpty() const;

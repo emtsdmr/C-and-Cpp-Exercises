@@ -47,6 +47,11 @@ int main(){
 	Graph* gr=new Graph;
 	test_addNode(gr);
 	test_addEdge(gr);
+	Node* n5=new Node("n5");
+	const set<Edge*> s0=gr->getEdgeSet(n5);
+	gr->printEdgeSet(s0);
+	const set<Edge*> s1=gr->getEdgeSet(gr->getNode("n1"));
+	gr->printEdgeSet(s1);
 	gr->printGraph();
 	return 0;
 }
