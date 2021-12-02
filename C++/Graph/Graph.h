@@ -53,8 +53,8 @@ class Graph{
 		const set<Edge*> getEdgeSet(Node* n)const;
 		void printEdgeSet(const set<Edge*> s)const;
 		const set<Node*> getNeighbors(Node* n) const;
-		const set<Node*>& getNodeSet() const;
-		bool isEmpty() const;
+		void printNodeSet(const set<Node*> sNode)const;
+		bool empty() const;
 		bool isNeighbor(Node* n1, Node* n2) const;
 		void removeEdge(Node* n1, Node* n2);
 		void removeNode(string name);

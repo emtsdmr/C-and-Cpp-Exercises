@@ -45,13 +45,21 @@ void test_addEdge(Graph* g)
 int main(){
 
 	Graph* gr=new Graph;
+	cout<<gr->empty()<<endl;
 	test_addNode(gr);
 	test_addEdge(gr);
+	cout<<gr->empty()<<endl;
 	Node* n5=new Node("n5");
 	const set<Edge*> s0=gr->getEdgeSet(n5);
 	gr->printEdgeSet(s0);
 	const set<Edge*> s1=gr->getEdgeSet(gr->getNode("n1"));
 	gr->printEdgeSet(s1);
+	const set<Node*> n1=gr->getNeighbors(gr->getNode("n1"));
+	gr->printNodeSet(n1);
+	cout<<gr->isNeighbor(gr->getNode("n1"),gr->getNode("n2"))<<endl;
+	Node* n4=gr->addNode("n4");
+	Edge* e5=gr->addEdge(gr->getNode("n2"),n4,6);
+	cout<<gr->isNeighbor(gr->getNode("n1"),gr->getNode("n4"))<<endl;
 	gr->printGraph();
 	return 0;
 }

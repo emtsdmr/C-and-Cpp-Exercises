@@ -1,7 +1,6 @@
 #include "Graph.h"
 #include <iostream>
 #include <string>
-#include <iterator>
 
 using namespace std;
 
@@ -143,21 +142,56 @@ void Graph::printEdgeSet(const set<Edge*> sEdge)const
 		cout<<"Empty Set of Edges!"<<endl;
 	else
 	{
-		
 		for(auto it=sEdge.begin();it!=sEdge.end();it++)
 			cout<<(*it)->start->name<<"->"<<(*it)->finish->name<<","<<(*it)->weight<<" ";
 		cout<<endl;
 	}
 }
 
+const set<Node*> Graph::getNeighbors(Node* n) const
+{
+	set<Edge*> sEdge=getEdgeSet(n);
+	set<Node*> sNode;
+	for(auto it=sEdge.begin();it!=sEdge.end();it++)
+		sNode.insert((*it)->finish);
+
+	return sNode;
+}
+
+void Graph::printNodeSet(const set<Node*> sNode)const
+{
+	if(sNode.empty())
+		cout<<"Empty Set of Nodes!"<<endl;
+	else
+	{
+		for(auto it=sNode.begin();it!=sNode.end();it++)
+			cout<<(*it)->name<<" ";
+		cout<<endl;
+	}
+}
+bool Graph::empty() const
+{
+	return Nodes.empty();
+}
+bool Graph::isNeighbor(Node* n1, Node* n2) const
+{
+	set<Node*> sNode1=getNeighbors(n1);
+	set<Node*> sNode2=getNeighbors(n2);
+	for(auto it=sNode1.begin();it!=sNode1.end();it++)
+	{
+		if((*it)->name==n2->name)
+			return true;
+	}
+	for(auto it=sNode2.begin();it!=sNode2.end();it++)
+	{
+		if((*it)->name==n1->name)
+			return true;
+	}
+	return false; 
+}
 /*
-const set<Node*> getNeighbors(Node* v) const;
-Node* getNode(string name) const;
-const set<Node*>& getNodeSet() const;
-bool isEmpty() const;
-bool isNeighbor(Node* v1, Node* v2) const;
-void removeEdge(Node* v1, Node* v2);
-void removeNode(string name);
-int size() const;
-void clear();
-string toString() const;*/
+void Graph::removeEdge(Node* v1, Node* v2);
+void Graph::removeNode(string name);
+int Graph::size() const;
+void Graph::clear();
+string Graph::toString() const;*/
